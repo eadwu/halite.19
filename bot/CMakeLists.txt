@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(MyBot)
+project(Lingjian)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -20,8 +20,8 @@ endforeach()
 include_directories(${CMAKE_SOURCE_DIR})
 set(SOURCE_FILES "${SOURCE_FILES}" MyBot.cpp)
 
-add_executable(MyBot ${SOURCE_FILES})
+add_executable(Lingjian ${SOURCE_FILES})
 
 if(MINGW)
-    target_link_libraries(MyBot -static)
+    target_link_libraries(Lingjian -static)
 endif()
