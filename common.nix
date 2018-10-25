@@ -1,13 +1,12 @@
 { stdenv, fetchurl
 , cmake, p7zip }:
 
-{ src, version }:
+{ name, src, version }:
 
 with stdenv;
 
 stdenv.mkDerivation {
-  inherit src version;
-  name = "Lingjian-${version}";
+  inherit name src version;
 
   buildInputs = [
     cmake

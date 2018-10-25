@@ -3,7 +3,7 @@
 with pkgs;
 
 let
-  mkLingjian = callPackage ./common.nix { };
+  mkHaliteBot = callPackage ./common.nix { };
 in {
   halite = stdenv.mkDerivation rec {
     name = "Halite-${version}";
@@ -24,17 +24,19 @@ in {
     '';
   };
 
-  lingjian = mkLingjian {
+  lingjian = mkHaliteBot rec {
     src = ./bot;
-    version = "beta";
+    version = "20181025";
+    name = "Lingjian-${version}";
   };
 
-  lingjian_legacy1 = mkLingjian {
+  mycppbot = mkHaliteBot rec {
     src = "${fetchgit {
       url = "https://github.com/HaliteChallenge/Halite-III";
       rev = "v1.0.2";
       sha256 = "1ls0gvzsf2vraa73bahkm3vxycglbbdr1h8rkwn8rb1942gk0axz";
     }}/starter_kits/C++";
     version = "1.0.0";
+    name = "MyCppBot-${version}";
   };
 }
