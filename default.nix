@@ -39,4 +39,24 @@ in {
     version = "1.0.0";
     name = "MyCppBot-${version}";
   };
+
+  halite-benchmark-bots = stdenv.mkDerivation rec {
+    name = "Halite-Benchmark-Bots-${version}";
+    version = "20181020";
+
+    src = fetchgit {
+      url = "https://github.com/fohristiwhirl/halite3_benchmarks";
+      rev = "da9614c9464b06b9d515e709f3659a7148b4c708";
+      sha256 = "0pxc8yl66j7a92r46zqm0hchzmbxamhapihpyxf577zhwiirf1r4";
+    };
+
+    dontBuild = true;
+
+    installPhase = ''
+      mkdir -p $out
+
+      rm README.md
+      cp -r * $out
+    '';
+  };
 }
