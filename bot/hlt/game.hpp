@@ -10,6 +10,7 @@
 
 namespace hlt {
     struct Game {
+        int turn_limit;
         int turn_number;
         PlayerId my_id;
         std::vector<std::shared_ptr<Player>> players;

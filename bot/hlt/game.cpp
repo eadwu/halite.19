@@ -19,6 +19,7 @@ hlt::Game::Game() : turn_number(0) {
     }
     me = players[my_id];
     game_map = GameMap::_generate();
+    turn_limit = 400 + (game_map->width - 32) / 8 * 25;
 }
 
 void hlt::Game::ready(const std::string& name) {

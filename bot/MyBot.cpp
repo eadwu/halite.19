@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
     game.ready("Lingjian");
 
     log::log("Lingjian has been loaded, player id is " + to_string(game.my_id));
+    log::log("Projected turn limit is " + to_string(game.turn_limit));
     for (;;) {
         game.update_frame();
         shared_ptr<Player> me = game.me;
