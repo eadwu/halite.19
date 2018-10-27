@@ -17,6 +17,7 @@ void hlt::GameMap::_update() {
         int halite;
         hlt::get_sstream() >> x >> y >> halite;
         cells[y][x].halite = halite;
+        cells[y][x].priority = halite;
     }
 }
 
