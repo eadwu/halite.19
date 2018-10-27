@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
         vector<Command> command_queue;
 
         for (const auto& ship_iterator : me->ships) {
-            std::stringstream output;
+            std::ostringstream output;
             shared_ptr<Ship> ship = ship_iterator.second;
             MapCell *cell = game_map->at(ship);
             std::array<Position, 4> borders = cell->position.get_surrounding_cardinals();
