@@ -33,4 +33,9 @@ namespace hlt {
 
         static std::shared_ptr<Ship> _generate(PlayerId player_id);
     };
+
+    static std::ostream& operator<<(std::ostream& out, const std::shared_ptr<Ship> ship) {
+        out << 'S' << ship->id;
+        return out;
+    }
 }

@@ -50,7 +50,7 @@ namespace hlt {
     };
 
     static std::ostream& operator<<(std::ostream& out, const Position& position) {
-        out << position.x << ' ' << position.y;
+        out << '[' << position.x << ',' << position.y << ']';
         return out;
     }
     static std::istream& operator>>(std::istream& in, Position& position) {
