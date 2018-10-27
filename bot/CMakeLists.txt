@@ -20,8 +20,8 @@ endforeach()
 include_directories(${CMAKE_SOURCE_DIR})
 set(SOURCE_FILES "${SOURCE_FILES}" MyBot.cpp)
 
-add_executable(Lingjian ${SOURCE_FILES})
+add_executable(MyBot ${SOURCE_FILES})
 
 if(MINGW)
-    target_link_libraries(Lingjian -static)
+    target_link_libraries(MyBot -static)
 endif()
