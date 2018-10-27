@@ -14,8 +14,12 @@ int main(int argc, char* argv[]) {
     Game game;
     game.ready("Lingjian");
 
-    log::log("Lingjian has been loaded, player id is " + to_string(game.my_id));
-    log::log("Projected turn limit is " + to_string(game.turn_limit));
+    std::ostringstream initial_debug;
+    initial_debug
+        << "Player id is " << game.my_id << '\n'
+        << "Projected turn limit is " << game.turn_limit;
+    log::log(initial_debug.str());
+
     for (;;) {
         game.update_frame();
         shared_ptr<Player> me = game.me;
@@ -24,7 +28,7 @@ int main(int argc, char* argv[]) {
         vector<Command> command_queue;
 
         for (const auto& ship_iterator : me->ships) {
-            std::ostringstream output;
+            std::ostringstream action_debug;
             shared_ptr<Ship> ship = ship_iterator.second;
             MapCell *cell = game_map->at(ship);
             std::array<Position, 4> borders = cell->position.get_surrounding_cardinals();
@@ -46,29 +50,31 @@ int main(int argc, char* argv[]) {
                 Position newPos = game_map->at(ship)->position.directional_offset(chosenDir);
 
                 ship->returning = true;
-
-                output << "MOV " << ship << " " << newPos;
+                action_debug << "MOV " << ship << " " << newPos;
                 command_queue.push_back(ship->move(chosenDir));
             }
             else if (ship->halite < cell->halite * 0.1 ||
                      cell->halite > constants::MAX_HALITE / 20)
             {
-                output << "COL " << ship << " " << cell->position << " " << cell->halite * 0.1;
+                action_debug << "COL " << ship << " " << cell->position << " " << cell->halite * 0.1;
                 command_queue.push_back(ship->stay_still());
             }
             else
             {
-                output << "MOV " << ship << " " << borders[0];
+                action_debug << "MOV " << ship << " " << borders[0];
                 command_queue.push_back(ship->move(game_map->naive_navigate(ship, borders[0])));
             }
-            log::log(output.str());
+            log::log(action_debug.str());
         }
 
         if (me->ships.size() < (game.total_ships() - me->ships.size()) / (game.players.size() - 1) * (1 + pow(2, game.players.size() * 0.1)) &&
             me->halite >= constants::SHIP_COST &&
             !game_map->at(me->shipyard)->is_occupied())
         {
-            log::log("GEN S" + to_string(game.total_ships() + 1));
+            std::ostringstream spawn_debug;
+            spawn_debug << "GEN S" << game.total_ships() + 1;
+
+            log::log(spawn_debug.str());
             command_queue.push_back(me->shipyard->spawn());
         }
 
