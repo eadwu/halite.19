@@ -5,6 +5,7 @@
 #include "types.hpp"
 
 #include <vector>
+#include <numeric>
 #include <iostream>
 
 namespace hlt {
@@ -19,5 +20,11 @@ namespace hlt {
         void ready(const std::string& name);
         void update_frame();
         bool end_turn(const std::vector<Command>& commands);
+
+        int total_ships() {
+            return std::accumulate(begin(players), end(players), 0, [](int total, const auto& plr) {
+                return total + plr->ships.size();
+            });
+        }
     };
 }
