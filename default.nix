@@ -26,7 +26,7 @@ in {
 
   lingjian = mkHaliteBot rec {
     src = ./bot;
-    version = "20181025";
+    version = "2.0.0";
     name = "Lingjian-${version}";
   };
 
