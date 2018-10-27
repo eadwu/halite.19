@@ -24,23 +24,7 @@ in {
     '';
   };
 
-  lingjian = mkHaliteBot rec {
-    src = ./bot;
-    version = "2.0.1";
-    name = "Lingjian-${version}";
-  };
-
-  mycppbot = mkHaliteBot rec {
-    src = "${fetchgit {
-      url = "https://github.com/HaliteChallenge/Halite-III";
-      rev = "v1.0.2";
-      sha256 = "1ls0gvzsf2vraa73bahkm3vxycglbbdr1h8rkwn8rb1942gk0axz";
-    }}/starter_kits/C++";
-    version = "1.0.0";
-    name = "MyCppBot-${version}";
-  };
-
-  halite-benchmark-bots = stdenv.mkDerivation rec {
+    halite-benchmark-bots = stdenv.mkDerivation rec {
     name = "Halite-Benchmark-Bots-${version}";
     version = "20181020";
 
@@ -58,5 +42,21 @@ in {
       rm README.md
       cp -r * $out
     '';
+  };
+
+  lingjian = mkHaliteBot rec {
+    src = ./bot;
+    version = "2.0.1";
+    name = "Lingjian-${version}";
+  };
+
+  mycppbot = mkHaliteBot rec {
+    src = "${fetchgit {
+      url = "https://github.com/HaliteChallenge/Halite-III";
+      rev = "v1.0.2";
+      sha256 = "1ls0gvzsf2vraa73bahkm3vxycglbbdr1h8rkwn8rb1942gk0axz";
+    }}/starter_kits/C++";
+    version = "1.0.0";
+    name = "MyCppBot-${version}";
   };
 }
