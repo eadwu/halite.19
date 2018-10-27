@@ -2,29 +2,19 @@
 #include "hlt/constants.hpp"
 #include "hlt/log.hpp"
 
-#include <random>
-#include <ctime>
+#include <math.h>
+
+#include <sstream>
+#include <algorithm>
 
 using namespace std;
 using namespace hlt;
 
 int main(int argc, char* argv[]) {
-    unsigned int rng_seed;
-    if (argc > 1) {
-        rng_seed = static_cast<unsigned int>(stoul(argv[1]));
-    } else {
-        rng_seed = static_cast<unsigned int>(time(nullptr));
-    }
-    mt19937 rng(rng_seed);
-
     Game game;
-    // At this point "game" variable is populated with initial map data.
-    // This is a good place to do computationally expensive start-up pre-processing.
-    // As soon as you call "ready" function below, the 2 second per turn timer will start.
     game.ready("Lingjian");
 
-    log::log("Successfully created bot! My Player ID is " + to_string(game.my_id) + ". Bot rng seed is " + to_string(rng_seed) + ".");
-
+    log::log("Lingjian has been loaded, player id is " + to_string(game.my_id));
     for (;;) {
         game.update_frame();
         shared_ptr<Player> me = game.me;
@@ -33,20 +23,51 @@ int main(int argc, char* argv[]) {
         vector<Command> command_queue;
 
         for (const auto& ship_iterator : me->ships) {
+            std::stringstream output;
             shared_ptr<Ship> ship = ship_iterator.second;
-            if (game_map->at(ship)->halite < constants::MAX_HALITE / 10 || ship->is_full()) {
-                Direction random_direction = ALL_CARDINALS[rng() % 4];
-                command_queue.push_back(ship->move(random_direction));
-            } else {
+            MapCell *cell = game_map->at(ship);
+            std::array<Position, 4> borders = cell->position.get_surrounding_cardinals();
+
+            sort(borders.begin(), borders.end(), [&](const auto a, const auto b) {
+                return game_map->at(a)->priority > game_map->at(b)->priority;
+            });
+
+            if (game_map->at(ship)->has_structure() || ship->halite == 0) ship->returning = false;
+
+            if (ship->is_full() ||
+                ship->is_returning() ||
+                ship->halite >= constants::MAX_HALITE * 0.925 ||
+                (ship->halite >= constants::MAX_HALITE * 0.65 && game_map->calculate_distance(ship->position, me->shipyard->position) <= 3))
+            {
+                Direction naiveDir = game_map->naive_navigate(ship, me->shipyard->position);
+                Direction borderDir = game_map->naive_navigate(ship, borders[0]);
+                Direction chosenDir = naiveDir != Direction::STILL ? naiveDir : borderDir;
+                Position newPos = game_map->at(ship)->position.directional_offset(chosenDir);
+
+                ship->returning = true;
+
+                output << "MOV " << ship << " " << newPos;
+                command_queue.push_back(ship->move(chosenDir));
+            }
+            else if (ship->halite < cell->halite * 0.1 ||
+                     cell->halite > constants::MAX_HALITE / 20)
+            {
+                output << "COL " << ship << " " << cell->position << " " << cell->halite * 0.1;
                 command_queue.push_back(ship->stay_still());
             }
+            else
+            {
+                output << "MOV " << ship << " " << borders[0];
+                command_queue.push_back(ship->move(game_map->naive_navigate(ship, borders[0])));
+            }
+            log::log(output.str());
         }
 
-        if (
-            game.turn_number <= 200 &&
+        if (me->ships.size() < (game.total_ships() - me->ships.size()) / (game.players.size() - 1) * (1 + pow(2, game.players.size() * 0.1)) &&
             me->halite >= constants::SHIP_COST &&
             !game_map->at(me->shipyard)->is_occupied())
         {
+            log::log("GEN S" + to_string(game.total_ships() + 1));
             command_queue.push_back(me->shipyard->spawn());
         }
 
