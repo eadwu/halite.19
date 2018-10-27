@@ -9,14 +9,20 @@
 namespace hlt {
     struct Ship : Entity {
         Halite halite;
+        bool returning;
 
         Ship(PlayerId player_id, EntityId ship_id, int x, int y, Halite halite) :
             Entity(player_id, ship_id, x, y),
-            halite(halite)
+            halite(halite),
+            returning(false)
         {}
 
         bool is_full() const {
             return halite >= constants::MAX_HALITE;
+        }
+
+        bool is_returning() const {
+            return returning;
         }
 
         Command make_dropoff() const {
