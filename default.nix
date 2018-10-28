@@ -67,7 +67,7 @@ in {
 
     installPhase = ''
       mkdir -p $out/bin
-      find -type f -executable -exec cp "{}" $out/bin \;
+      cp halite $out/bin
     '';
   };
 
