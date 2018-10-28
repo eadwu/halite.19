@@ -1,0 +1,17 @@
+#!/usr/bin/env nix-shell
+#!nix-shell --pure -i bash -p python3
+set -e
+
+iterations=${1:-100}
+
+[ ! -d replays ] && mkdir replays
+[ -z replays ] && rm replays/*
+
+result-3/bin/hlt gym --db-path ./gym.db \
+  evaluate \
+  --binary result/bin/halite \
+  --output-dir ./replays \
+  --iterations $iterations
+
+result-3/bin/hlt gym --db-path ./gym.db \
+  stats "SELECT * FROM bots" > ranking.txt

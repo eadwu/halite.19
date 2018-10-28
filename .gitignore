@@ -1,3 +1,7 @@
 result*
+
+ranking.txt
+
+*.db*
 *.hlt
 *.log
