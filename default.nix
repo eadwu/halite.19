@@ -17,6 +17,7 @@ in {
       }}/game_engine"
 
       (fetchgit {
+        name = "catch";
         url = "https://github.com/catchorg/Catch2";
         rev = "v2.2.3";
         sha256 = "1v7j7rd2i79qaij0izvidjvcjximxp6drimc1ih7sinv2194j1f8";
@@ -28,12 +29,15 @@ in {
         sha256 = "1mpr781fb2dfbyscrr7nil75lkxsazg4wkm749168lcf2ksrrbfi";
       }}/include")
 
-      (fetchurl {
-        url = "https://netix.dl.sourceforge.net/project/tclap/tclap-1.2.2.tar.gz";
-        sha256 = "0dsqvsgzam3mypj2ladn6v1yjq9zd47p3lg21jx6kz5azkkkn0gm";
+      (fetchgit {
+        name = "tclap";
+        url = "https://git.code.sf.net/p/tclap/code";
+        rev = "v1.2.2";
+        sha256 = "16hwjkm5q26p11w2wfzbkyxm20z8hn8wid9v8iqhz5cmayz808l7";
       })
 
       (fetchgit {
+        name = "zstd";
         url = "https://github.com/facebook/zstd";
         rev = "v1.3.4";
         sha256 = "090ba7dnv5z2v4vlb8b275b0n7cqsdzjqvr3b6a0w65z13mgy2nw";
@@ -43,10 +47,10 @@ in {
     postUnpack = ''
       mkdir -p game_engine/build/external
 
-      cp -r --no-preserve=all Catch2 game_engine/build/external/catch
+      cp -r --no-preserve=all catch game_engine/build/external
+      cp -r --no-preserve=all tclap game_engine/build/external
+      cp -r --no-preserve=all zstd game_engine/build/external
       cp -r --no-preserve=all include game_engine/build/external/nlohmann
-      cp -r --no-preserve=all tclap* game_engine/build/external/tclap
-      cp -r --no-preserve=all zstd game_engine/build/external/zstd
     '';
 
     sourceRoot = "game_engine";
