@@ -9,18 +9,61 @@ in {
     name = "Halite-${version}";
     version = "1.0.2";
 
-    src = fetchurl {
-      url = "https://halite.io/assets/downloads/Halite3_Linux-AMD64.zip";
-      sha256 = "0wfm2xdif32i5khg8sd7r9kd33ibrix8b49gxxagv975m7wh1q1n";
-    };
+    srcs = [
+      "${fetchgit {
+        url = "https://github.com/HaliteChallenge/Halite-III";
+        rev = "v${version}";
+        sha256 = "1ls0gvzsf2vraa73bahkm3vxycglbbdr1h8rkwn8rb1942gk0axz";
+      }}/game_engine"
 
-    buildInputs = [
-      unzip
+      (fetchgit {
+        url = "https://github.com/catchorg/Catch2";
+        rev = "v2.2.3";
+        sha256 = "1v7j7rd2i79qaij0izvidjvcjximxp6drimc1ih7sinv2194j1f8";
+      })
+
+      ("${fetchgit {
+        url = "https://github.com/nlohmann/json";
+        rev = "v3.1.2";
+        sha256 = "1mpr781fb2dfbyscrr7nil75lkxsazg4wkm749168lcf2ksrrbfi";
+      }}/include")
+
+      (fetchurl {
+        url = "https://netix.dl.sourceforge.net/project/tclap/tclap-1.2.2.tar.gz";
+        sha256 = "0dsqvsgzam3mypj2ladn6v1yjq9zd47p3lg21jx6kz5azkkkn0gm";
+      })
+
+      (fetchgit {
+        url = "https://github.com/facebook/zstd";
+        rev = "v1.3.4";
+        sha256 = "090ba7dnv5z2v4vlb8b275b0n7cqsdzjqvr3b6a0w65z13mgy2nw";
+      })
     ];
 
-    buildCommand = ''
+    postUnpack = ''
+      mkdir -p game_engine/build/external
+
+      cp -r --no-preserve=all Catch2 game_engine/build/external/catch
+      cp -r --no-preserve=all include game_engine/build/external/nlohmann
+      cp -r --no-preserve=all tclap* game_engine/build/external/tclap
+      cp -r --no-preserve=all zstd game_engine/build/external/zstd
+    '';
+
+    sourceRoot = "game_engine";
+
+    prePatch = ''
+      sed -i 's/URL/#\0/' CMakeLists.txt.in
+    '';
+
+    buildInputs = [
+      cmake
+      unzip
+      glibc.static
+    ];
+
+    installPhase = ''
       mkdir -p $out/bin
-      unzip ${src} -d $out/bin
+      find -type f -executable -exec cp "{}" $out/bin \;
     '';
   };
 
