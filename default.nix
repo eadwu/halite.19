@@ -117,6 +117,16 @@ in {
     name = "Lingjian-${version}";
   };
 
+  lingjian_legacy2 = mkHaliteBot rec {
+    src = "${fetchgit {
+      url = ./.;
+      rev = version;
+      sha256 = "0g7rx8pvmjg38rcxhfjwa4cpg1d70q8kw6ry5hzhz0yn8di623a9";
+    }}/bot";
+    version = "2.0.1";
+    name = "Lingjian-${version}";
+  };
+
   mycppbot = mkHaliteBot rec {
     src = "${fetchgit {
       url = "https://github.com/HaliteChallenge/Halite-III";
