@@ -67,7 +67,7 @@ in {
     '';
   };
 
-    halite-benchmark-bots = stdenv.mkDerivation rec {
+  halite-benchmark-bots = stdenv.mkDerivation rec {
     name = "Halite-Benchmark-Bots-${version}";
     version = "20181020";
 
@@ -85,6 +85,26 @@ in {
       rm README.md
       cp -r * $out
     '';
+  };
+
+  hlt-client = python3Packages.buildPythonApplication rec {
+    name = "hlt-client-${version}";
+    version = "1.0.2";
+
+    src = "${fetchgit {
+      url = "https://github.com/HaliteChallenge/Halite-III";
+      rev = "v${version}";
+      sha256 = "1ls0gvzsf2vraa73bahkm3vxycglbbdr1h8rkwn8rb1942gk0axz";
+    }}/tools/hlt_client";
+
+    propagatedBuildInputs = with python3Packages; [
+      zstd
+      appdirs
+      requests
+      trueskill
+    ];
+
+    doCheck = false;
   };
 
   lingjian = mkHaliteBot rec {
