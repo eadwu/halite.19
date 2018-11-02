@@ -27,5 +27,9 @@ namespace hlt {
                 return total + plr->ships.size();
             });
         }
+
+        int average_enemy_ships() {
+            return (total_ships() - me->ships.size()) / (players.size() - 1);
+        }
     };
 }

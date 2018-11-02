@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
             std::ostringstream action_debug;
             shared_ptr<Ship> ship = ship_iterator.second;
             MapCell *cell = game_map->at(ship);
+
             std::array<Position, 4> borders = cell->position.get_surrounding_cardinals();
 
             sort(borders.begin(), borders.end(), [&](const auto a, const auto b) {
@@ -42,7 +43,7 @@ int main(int argc, char* argv[]) {
             if (ship->is_full() ||
                 ship->is_returning() ||
                 ship->halite >= constants::MAX_HALITE * 0.925 ||
-                (ship->halite >= constants::MAX_HALITE * 0.65 && game_map->calculate_distance(ship->position, me->shipyard->position) <= 3))
+                (ship->halite >= constants::MAX_HALITE * 0.65 && game_map->calculate_path(ship->position, me->shipyard->position).size() <= 5))
             {
                 Direction direction = game_map->naive_navigate(ship, me->shipyard->position);
                 Direction border_dir = game_map->naive_navigate(ship, borders[0]);
@@ -54,7 +55,8 @@ int main(int argc, char* argv[]) {
                 command_queue.push_back(ship->move(chosen_dir));
             }
             else if (ship->halite < cell->halite * 0.1 ||
-                     cell->halite > constants::MAX_HALITE / 20)
+                     cell->halite > constants::MAX_HALITE / 20 ||
+                     cell->priority * 1.32 > game_map->at(borders[0])->priority)
             {
                 action_debug << "COL " << ship << " " << cell->position << " " << cell->halite * 0.1;
                 command_queue.push_back(ship->stay_still());
@@ -67,7 +69,8 @@ int main(int argc, char* argv[]) {
             log::log(action_debug.str());
         }
 
-        if (me->ships.size() < (game.total_ships() - me->ships.size()) / (game.players.size() - 1) * (1 + pow(2, game.players.size() * 0.1)) &&
+        if ((me->ships.size() < 5 || me->ships.size() < game.average_enemy_ships() * (1 + pow(2, game.players.size() * 0.1))) &&
+            game.turn_number < game.turn_limit * 0.9 &&
             me->halite >= constants::SHIP_COST &&
             !game_map->at(me->shipyard)->is_occupied())
         {
