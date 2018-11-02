@@ -44,14 +44,14 @@ int main(int argc, char* argv[]) {
                 ship->halite >= constants::MAX_HALITE * 0.925 ||
                 (ship->halite >= constants::MAX_HALITE * 0.65 && game_map->calculate_distance(ship->position, me->shipyard->position) <= 3))
             {
-                Direction naiveDir = game_map->naive_navigate(ship, me->shipyard->position);
-                Direction borderDir = game_map->naive_navigate(ship, borders[0]);
-                Direction chosenDir = naiveDir != Direction::STILL ? naiveDir : borderDir;
-                Position newPos = game_map->at(ship)->position.directional_offset(chosenDir);
+                Direction direction = game_map->naive_navigate(ship, me->shipyard->position);
+                Direction border_dir = game_map->naive_navigate(ship, borders[0]);
+                Direction chosen_dir = direction != Direction::STILL ? direction : border_dir;
+                Position end_node = game_map->at(ship)->position.directional_offset(chosen_dir);
 
                 ship->returning = true;
-                action_debug << "MOV " << ship << " " << newPos;
-                command_queue.push_back(ship->move(chosenDir));
+                action_debug << "MOV " << ship << " " << end_node;
+                command_queue.push_back(ship->move(chosen_dir));
             }
             else if (ship->halite < cell->halite * 0.1 ||
                      cell->halite > constants::MAX_HALITE / 20)
