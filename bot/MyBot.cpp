@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
             std::array<Position, 4> borders = cell->position.get_surrounding_cardinals();
 
             sort(borders.begin(), borders.end(), [&](const auto a, const auto b) {
-                return game_map->at(a)->priority > game_map->at(b)->priority;
+                return game_map->at(a) > game_map->at(b);
             });
 
             if (game_map->at(ship)->has_structure() || ship->halite == 0) ship->returning = false;
