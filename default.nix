@@ -123,7 +123,7 @@ in {
       rev = version;
       sha256 = "0g7rx8pvmjg38rcxhfjwa4cpg1d70q8kw6ry5hzhz0yn8di623a9";
     }}/bot";
-    version = "2.0.1";
+    version = "2.0.2";
     name = "Lingjian-${version}";
   };
 
