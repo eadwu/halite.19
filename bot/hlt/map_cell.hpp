@@ -19,6 +19,8 @@ namespace hlt {
             priority(halite)
         {}
 
+        inline bool operator> (const MapCell& other) const { return priority > other.priority; }
+
         bool is_empty() const {
             return !ship && !structure;
         }

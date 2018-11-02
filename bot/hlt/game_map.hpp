@@ -3,7 +3,10 @@
 #include "types.hpp"
 #include "map_cell.hpp"
 
+#include <queue>
 #include <vector>
+#include <algorithm>
+#include <unordered_map>
 
 namespace hlt {
     struct GameMap {
@@ -71,6 +74,51 @@ namespace hlt {
             }
 
             return possible_moves;
+        }
+
+        std::vector<Position> calculate_path(const Position& source, const Position& destination) {
+            std::vector<Position> path;
+
+            auto gScore = [this](const std::pair<double, Position>& a, const std::pair<double, Position>& b) {
+                return at(a.second) > at(b.second);
+            };
+            std::priority_queue<std::pair<double, Position>, std::vector<std::pair<double, Position>>, decltype(gScore)> frontier(gScore);
+            std::unordered_map<Position, MapCell*> came_from;
+            std::unordered_map<Position, double> cost_so_far;
+
+            frontier.emplace(0, source);
+            cost_so_far[source] = 0;
+            came_from[source] = at(source);
+
+            while (!frontier.empty()) {
+                Position current = frontier.top().second;
+                frontier.pop();
+
+                if (current == destination) {
+                    while (current != source) {
+                        path.push_back(current);
+                        current = came_from[current]->position;
+                    }
+                    break;
+                }
+
+                for (Position next : current.get_surrounding_cardinals()) {
+                    next = normalize(next);
+                    double new_cost = cost_so_far[current] + at(next)->halite * 0.1;
+
+                    if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next]) {
+                        cost_so_far[next] = new_cost;
+
+                        double priority = new_cost + calculate_distance(next, destination);
+                        frontier.emplace(priority, next);
+
+                        came_from[next] = at(current);
+                    }
+                }
+            }
+
+            std::reverse(path.begin(), path.end());
+            return path;
         }
 
         Direction naive_navigate(std::shared_ptr<Ship> ship, const Position& destination) {
