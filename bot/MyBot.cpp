@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
                 (ship->halite >= constants::MAX_HALITE * 0.65 && game_map->calculate_path(ship->position, me->shipyard->position).size() <= 5))
             {
                 Direction direction = game_map->naive_navigate(ship, me->shipyard->position);
-                Direction border_dir = game_map->naive_navigate(ship, borders[0]);
+                Direction border_dir = game_map->naive_navigate(ship, borders[rand() % borders.size()]);
                 Direction chosen_dir = direction != Direction::STILL ? direction : border_dir;
                 Position end_node = game_map->at(ship)->position.directional_offset(chosen_dir);
 
