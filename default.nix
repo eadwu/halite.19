@@ -4,17 +4,20 @@ with pkgs;
 
 let
   mkHaliteBot = callPackage ./common.nix { };
+
+  haliteVersion = "1.1.3";
+  haliteSource = fetchgit {
+    url = "https://github.com/HaliteChallenge/Halite-III";
+    rev = "v${haliteVersion}";
+    sha256 = "0z6hjfwqbxq9qimi5sy4sxv1ysj03amcidwy4sd7qqz9yw98p7i3";
+  };
 in {
   halite = stdenv.mkDerivation rec {
     name = "Halite-${version}";
-    version = "1.0.2";
+    version = haliteVersion;
 
     srcs = [
-      "${fetchgit {
-        url = "https://github.com/HaliteChallenge/Halite-III";
-        rev = "v${version}";
-        sha256 = "1ls0gvzsf2vraa73bahkm3vxycglbbdr1h8rkwn8rb1942gk0axz";
-      }}/game_engine"
+      "${haliteSource}/game_engine"
 
       (fetchgit {
         name = "catch";
@@ -93,13 +96,9 @@ in {
 
   hlt-client = python3Packages.buildPythonApplication rec {
     name = "hlt-client-${version}";
-    version = "1.0.2";
+    version = haliteVersion;
 
-    src = "${fetchgit {
-      url = "https://github.com/HaliteChallenge/Halite-III";
-      rev = "v${version}";
-      sha256 = "1ls0gvzsf2vraa73bahkm3vxycglbbdr1h8rkwn8rb1942gk0axz";
-    }}/tools/hlt_client";
+    src = "${haliteSource}/tools/hlt_client";
 
     propagatedBuildInputs = with python3Packages; [
       zstd
@@ -128,11 +127,7 @@ in {
   };
 
   mycppbot = mkHaliteBot rec {
-    src = "${fetchgit {
-      url = "https://github.com/HaliteChallenge/Halite-III";
-      rev = "v1.0.2";
-      sha256 = "1ls0gvzsf2vraa73bahkm3vxycglbbdr1h8rkwn8rb1942gk0axz";
-    }}/starter_kits/C++";
+    src = "${haliteSource}/starter_kits/C++";
     version = "1.0.0";
     name = "MyCppBot-${version}";
   };
