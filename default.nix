@@ -13,7 +13,7 @@ let
   };
 in {
   halite = stdenv.mkDerivation rec {
-    name = "Halite-${version}";
+    name = "Halite-III-${version}";
     version = haliteVersion;
 
     srcs = [
@@ -75,7 +75,7 @@ in {
   };
 
   halite-benchmark-bots = stdenv.mkDerivation rec {
-    name = "Halite-Benchmark-Bots-${version}";
+    name = "Halite-III-Benchmark-Bots-${version}";
     version = "20181020";
 
     src = fetchgit {
