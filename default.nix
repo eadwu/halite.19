@@ -120,7 +120,7 @@ in {
     src = "${fetchgit {
       url = ./.;
       rev = version;
-      sha256 = "0g7rx8pvmjg38rcxhfjwa4cpg1d70q8kw6ry5hzhz0yn8di623a9";
+      sha256 = "1n93mdrp2k88ihvjfzjzkk28fqli0kxmfzn3mzmv7rgq7hz2fwvp";
     }}/bot";
     version = "2.0.2";
     name = "Lingjian-${version}";
