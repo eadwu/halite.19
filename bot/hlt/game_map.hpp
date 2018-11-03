@@ -80,7 +80,7 @@ namespace hlt {
             std::vector<Position> path;
 
             auto gScore = [this](const std::pair<double, Position>& a, const std::pair<double, Position>& b) {
-                return at(a.second) > at(b.second);
+                return at(a.second)->priority > at(b.second)->priority;
             };
             std::priority_queue<std::pair<double, Position>, std::vector<std::pair<double, Position>>, decltype(gScore)> frontier(gScore);
             std::unordered_map<Position, MapCell*> came_from;
