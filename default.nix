@@ -28,6 +28,12 @@ in {
     name = "Fluorine-${version}";
     inherit (Fluorine) version;
 
+    buildInputs = [
+      gtk3
+      makeWrapper
+      hicolor-icon-theme
+    ];
+
     buildCommand = ''
       mkdir -p $out/bin
       mkdir -p $out/share/fluorine
@@ -35,6 +41,9 @@ in {
       cp -r ${Fluorine}/lib/node_modules/Fluorine $out/share/fluorine/electron
       substitute ${fluorineWrapper} $out/bin/fluorine --subst-var out
       chmod +x $out/bin/fluorine
+      wrapProgram $out/bin/fluorine \
+        --prefix XDG_DATA_DIRS : $GSETTINGS_SCHEMAS_PATH \
+        --suffix XDG_DATA_DIRS : ${hicolor-icon-theme}/share
     '';
   };
 
