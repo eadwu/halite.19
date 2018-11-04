@@ -20,7 +20,7 @@ let
     version = "1.2.3";
     src = fetchgit {
       url = "https://github.com/fohristiwhirl/fluorine";
-      rev = "d20eb2dafed68f1b620047bdf5d7522a6f95104f";
+      rev = "v${version}";
       sha256 = "0j4m462iwam0bb8ksgw5c8ncbf59v3m7js0cwyib7jx7ih8f2z93";
     };
     dependencies = [
