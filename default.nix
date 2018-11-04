@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> { } }:
 
 with pkgs;
 
@@ -11,7 +11,33 @@ let
     rev = "v${haliteVersion}";
     sha256 = "0z6hjfwqbxq9qimi5sy4sxv1ysj03amcidwy4sd7qqz9yw98p7i3";
   };
+
+  Fluorine = (import ./fluorine { inherit pkgs; }).package.override {
+    postInstall = ''
+      patchelf \
+        --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
+        $out/lib/node_modules/Fluorine/node_modules/node-zstandard/bin/zstd.linux64
+    '';
+  };
+  fluorineWrapper = writeScript "fluorine" ''
+    #!${stdenv.shell}
+    ${electron}/bin/electron @out@/share/fluorine/electron "$@"
+  '';
 in {
+  fluorine = stdenv.mkDerivation rec {
+    name = "Fluorine-${version}";
+    inherit (Fluorine) version;
+
+    buildCommand = ''
+      mkdir -p $out/bin
+      mkdir -p $out/share/fluorine
+
+      cp -r ${Fluorine}/lib/node_modules/Fluorine $out/share/fluorine/electron
+      substitute ${fluorineWrapper} $out/bin/fluorine --subst-var out
+      chmod +x $out/bin/fluorine
+    '';
+  };
+
   halite = stdenv.mkDerivation rec {
     name = "Halite-III-${version}";
     version = haliteVersion;
