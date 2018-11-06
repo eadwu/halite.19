@@ -57,6 +57,17 @@ namespace hlt {
             return get_surrounding_cardinals_in_range(1);
         }
 
+        Direction direction_to(Position& destination) {
+            int dx = destination.x - x;
+            int dy = destination.y - y;
+
+            if (dx == 0 && dy > 0) return Direction::SOUTH;
+            else if (dx == 0 && dy < 0) return Direction::NORTH;
+            else if (dx > 0 && dy == 0) return Direction::EAST;
+            else if (dx < 0 && dy == 0) return Direction::WEST;
+            return Direction::STILL;
+        }
+
         std::vector<Position> get_surroundings_in_range(int range) {
             std::vector<Position> surroundings;
 
