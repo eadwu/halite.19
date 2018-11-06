@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     Game game;
     game.ready("Lingjian Major");
 
-    std::ostringstream initial_debug;
+    ostringstream initial_debug;
     initial_debug
         << "Player id is " << game.my_id << '\n'
         << "Projected turn limit is " << game.turn_limit;
@@ -28,12 +28,12 @@ int main(int argc, char* argv[]) {
         vector<Command> command_queue;
 
         for (const auto& ship_iterator : me->ships) {
-            std::ostringstream action_debug;
+            ostringstream action_debug;
             shared_ptr<Ship> ship = ship_iterator.second;
             MapCell *cell = game_map->at(ship);
 
-            std::vector<Position> path_to_shipyard = game_map->calculate_path(ship->position, me->shipyard->position);
-            std::array<Position, 4> borders = cell->position.get_surrounding_cardinals_in_range(2);
+            vector<Position> path_to_shipyard = game_map->calculate_path(ship->position, me->shipyard->position);
+            array<Position, 4> borders = cell->position.get_surrounding_cardinals_in_range(2);
 
             sort(borders.begin(), borders.end(), [&](Position a, Position b) {
                 return game_map->average_priority_in_range(a, 2) > game_map->average_priority_in_range(b, 2);
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
             me->halite >= constants::SHIP_COST &&
             !game_map->at(me->shipyard)->is_occupied())
         {
-            std::ostringstream spawn_debug;
+            ostringstream spawn_debug;
             spawn_debug << "GEN S" << game.total_ships() + 1;
 
             log::log(spawn_debug.str());
