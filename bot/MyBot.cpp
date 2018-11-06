@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
         }
 
         if ((me->ships.size() < 5 || me->ships.size() < game.average_enemy_ships() * (1 + pow(2, game.players.size() * 0.1))) &&
-            game.turn_number < game.turn_limit * 0.9 &&
+            game.turn_number < game.turn_limit * 0.5 &&
             me->halite >= constants::SHIP_COST &&
             !game_map->at(me->shipyard)->is_occupied())
         {
