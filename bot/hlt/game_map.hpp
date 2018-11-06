@@ -5,6 +5,7 @@
 
 #include <queue>
 #include <vector>
+#include <numeric>
 #include <algorithm>
 #include <unordered_map>
 
@@ -29,6 +30,14 @@ namespace hlt {
 
         MapCell* at(const std::shared_ptr<Entity>& entity) {
             return at(entity->position);
+        }
+
+        double average_priority_in_range(Position& pos, int range) {
+            std::vector<Position> surroundings = pos.get_surroundings_in_range(range);
+
+            return std::accumulate(surroundings.begin(), surroundings.end(), 0., [this](int total, const auto& p) {
+                return total + at(normalize(p))->priority;
+            }) / surroundings.size();
         }
 
         int calculate_distance(const Position& source, const Position& target) {

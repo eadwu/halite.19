@@ -32,10 +32,10 @@ int main(int argc, char* argv[]) {
             shared_ptr<Ship> ship = ship_iterator.second;
             MapCell *cell = game_map->at(ship);
 
-            std::array<Position, 4> borders = cell->position.get_surrounding_cardinals();
+            std::array<Position, 4> borders = cell->position.get_surrounding_cardinals_in_range(2);
 
-            sort(borders.begin(), borders.end(), [&](const auto a, const auto b) {
-                return game_map->at(a)->priority > game_map->at(b)->priority;
+            sort(borders.begin(), borders.end(), [&](Position& a, Position& b) {
+                return game_map->average_priority_in_range(a, 2) > game_map->average_priority_in_range(b, 2);
             });
 
             if (game_map->at(ship)->has_structure() || ship->halite == 0) ship->returning = false;
