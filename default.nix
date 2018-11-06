@@ -147,7 +147,7 @@ in {
 
   lingjian = mkHaliteBot rec {
     src = ./bot;
-    version = "2.0.1";
+    version = "2.0.3";
     name = "Lingjian-${version}";
   };
 

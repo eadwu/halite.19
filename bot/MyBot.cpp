@@ -12,7 +12,7 @@ using namespace hlt;
 
 int main(int argc, char* argv[]) {
     Game game;
-    game.ready("Lingjian Minor");
+    game.ready("Lingjian Major");
 
     std::ostringstream initial_debug;
     initial_debug
