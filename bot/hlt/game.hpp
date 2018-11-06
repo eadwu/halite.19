@@ -31,5 +31,15 @@ namespace hlt {
         int average_enemy_ships() {
             return (total_ships() - me->ships.size()) / (players.size() - 1);
         }
+
+        std::vector<std::shared_ptr<Ship>> enemy_ships_in_range(Position& pos, int range) {
+            std::vector<std::shared_ptr<Ship>> ships = game_map->ships_in_range(pos, range);
+            const auto& end = std::remove_if(ships.begin(), ships.end(), [&](const auto& s) {
+                return (s->owner == my_id);
+            });
+
+            ships.erase(end, ships.end());
+            return ships;
+        }
     };
 }

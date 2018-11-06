@@ -32,6 +32,15 @@ namespace hlt {
             return at(entity->position);
         }
 
+        std::vector<std::shared_ptr<Ship>> ships_in_range(Position& pos, int range) {
+            std::vector<std::shared_ptr<Ship>> ships;
+            std::vector<Position> surroundings = pos.get_surroundings_in_range(range);
+
+            for (const auto& p : surroundings)
+                if (at(p)->is_occupied() && at(at(p)->ship) == at(p)) ships.push_back(at(p)->ship);
+            return ships;
+        }
+
         double average_priority_in_range(Position& pos, int range) {
             std::vector<Position> surroundings = pos.get_surroundings_in_range(range);
 
