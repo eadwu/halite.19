@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 
             std::array<Position, 4> borders = cell->position.get_surrounding_cardinals_in_range(2);
 
-            sort(borders.begin(), borders.end(), [&](Position& a, Position& b) {
+            sort(borders.begin(), borders.end(), [&](Position a, Position b) {
                 return game_map->average_priority_in_range(a, 2) > game_map->average_priority_in_range(b, 2);
             });
 
