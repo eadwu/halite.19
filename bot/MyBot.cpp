@@ -32,20 +32,24 @@ int main(int argc, char* argv[]) {
             shared_ptr<Ship> ship = ship_iterator.second;
             MapCell *cell = game_map->at(ship);
 
+            std::vector<Position> path_to_shipyard = game_map->calculate_path(ship->position, me->shipyard->position);
             std::array<Position, 4> borders = cell->position.get_surrounding_cardinals_in_range(2);
 
             sort(borders.begin(), borders.end(), [&](Position a, Position b) {
                 return game_map->average_priority_in_range(a, 2) > game_map->average_priority_in_range(b, 2);
             });
 
+            ship->suicidal = (unsigned) game.turn_number >= game.turn_limit - path_to_shipyard.size() + 2;
             if (game_map->at(ship)->has_structure() || ship->halite == 0) ship->returning = false;
 
             if (ship->is_full() ||
+                ship->is_suicidal() ||
                 ship->is_returning() ||
                 ship->halite >= constants::MAX_HALITE * 0.925 ||
-                (ship->halite >= constants::MAX_HALITE * 0.65 && game_map->calculate_path(ship->position, me->shipyard->position).size() <= 5))
+                (ship->halite >= constants::MAX_HALITE * 0.65 && path_to_shipyard.size() <= 5))
             {
-                Direction direction = game_map->naive_navigate(ship, me->shipyard->position);
+                Position targetPosition = ship->is_suicidal() ? path_to_shipyard[0] : me->shipyard->position;
+                Direction direction = ship->is_suicidal() ? game_map->get_unsafe_moves(ship->position, targetPosition)[0] : game_map->naive_navigate(ship, targetPosition);
                 Direction border_dir = game_map->naive_navigate(ship, borders[rand() % borders.size()]);
                 Direction chosen_dir = direction != Direction::STILL ? direction : border_dir;
                 Position end_node = game_map->at(ship)->position.directional_offset(chosen_dir);

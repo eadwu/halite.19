@@ -9,16 +9,22 @@
 namespace hlt {
     struct Ship : Entity {
         Halite halite;
+        bool suicidal;
         bool returning;
 
         Ship(PlayerId player_id, EntityId ship_id, int x, int y, Halite halite) :
             Entity(player_id, ship_id, x, y),
             halite(halite),
+            suicidal(false),
             returning(false)
         {}
 
         bool is_full() const {
             return halite >= constants::MAX_HALITE;
+        }
+
+        bool is_suicidal() const {
+            return suicidal;
         }
 
         bool is_returning() const {
