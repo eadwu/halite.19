@@ -14,14 +14,16 @@ let
       };
     };
   };
-  args = rec {
+in
+{
+  "fluorine-git+https://github.com/fohristiwhirl/fluorine" = nodeEnv.buildNodePackage {
     name = "Fluorine";
     packageName = "Fluorine";
     version = "1.2.3";
     src = fetchgit {
       url = "https://github.com/fohristiwhirl/fluorine";
-      rev = "v${version}";
-      sha256 = "0j4m462iwam0bb8ksgw5c8ncbf59v3m7js0cwyib7jx7ih8f2z93";
+      rev = "3ec439763e9762fc319fc5b2f11509a3257ea989";
+      sha256 = "dc75fc74da325b1a4f260d18121e9f5a1b212b8749935197e4f1b68f77dc9de7";
     };
     dependencies = [
       sources."node-zstandard-1.2.4"
@@ -33,9 +35,20 @@ let
     production = true;
     bypassCache = true;
   };
-in
-{
-  tarball = nodeEnv.buildNodeSourceDist args;
-  package = nodeEnv.buildNodePackage args;
-  shell = nodeEnv.buildNodeShell args;
+  "iodine-git+https://github.com/fohristiwhirl/iodine" = nodeEnv.buildNodePackage {
+    name = "Iodine";
+    packageName = "Iodine";
+    version = "0.2.0";
+    src = fetchgit {
+      url = "https://github.com/fohristiwhirl/iodine";
+      rev = "bf77fa84a18d97bdfacefa954f6d3fa0a3e1d0b3";
+      sha256 = "7573790efa119fb4aa4b9d93d9b4515b202e0bc4b6932f35589a63802063d014";
+    };
+    buildInputs = globalBuildInputs;
+    meta = {
+      description = "Realtime viewer for Halite 3";
+    };
+    production = true;
+    bypassCache = true;
+  };
 }

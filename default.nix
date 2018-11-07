@@ -12,18 +12,60 @@ let
     sha256 = "0z6hjfwqbxq9qimi5sy4sxv1ysj03amcidwy4sd7qqz9yw98p7i3";
   };
 
-  Fluorine = (import ./fluorine { inherit pkgs; }).package.override {
+  electronPackages = import ./electron { inherit pkgs; };
+
+  fluorineWrapper = writeScript "fluorine" ''
+    #!${stdenv.shell}
+    ${electron}/bin/electron @out@/share/fluorine/electron "$@"
+  '';
+  Fluorine = electronPackages."fluorine-git+https://github.com/fohristiwhirl/fluorine".override {
     postInstall = ''
       patchelf \
         --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
         $out/lib/node_modules/Fluorine/node_modules/node-zstandard/bin/zstd.linux64
     '';
   };
-  fluorineWrapper = writeScript "fluorine" ''
+
+  iodineWrapper = writeScript "iodine" ''
     #!${stdenv.shell}
-    ${electron}/bin/electron @out@/share/fluorine/electron "$@"
+    ${electron}/bin/electron @out@/share/iodine/electron "$@"
   '';
-in {
+  iodineSettings = writeText "settings.json" ''
+    {
+      "engine": "@dubnium@",
+      "sleep": 20
+    }
+  '';
+  Iodine = electronPackages."iodine-git+https://github.com/fohristiwhirl/iodine".override {
+    postInstall = ''
+      cp ${iodineSettings} $out/lib/node_modules/Iodine/settings.json
+    '';
+  };
+in rec {
+  dubnium = buildGoPackage rec {
+    name = "Dubnium-${version}";
+    version = "20181106";
+    goPackagePath = "github.com/fohristiwhirl/dubnium";
+
+    src = fetchFromGitHub {
+      owner = "fohristiwhirl";
+      repo = "dubnium";
+      rev = "latest";
+      sha256 = "0sbz829q0yj33wsbars08fk0jija13wm5n4prfam123581d2jyn9";
+    };
+
+    allowGoReference = true;
+
+    buildPhase = ''
+      go build ${src}/dubnium.go
+    '';
+
+    installPhase = ''
+      mkdir -p $bin
+      cp dubnium $bin
+    '';
+  };
+
   fluorine = stdenv.mkDerivation rec {
     name = "Fluorine-${version}";
     inherit (Fluorine) version;
@@ -143,6 +185,23 @@ in {
     ];
 
     doCheck = false;
+  };
+
+  iodine = stdenv.mkDerivation rec {
+    name = "Iodine-${version}";
+    inherit (Iodine) version;
+
+    buildCommand = ''
+      mkdir -p $out/bin
+      mkdir -p $out/share/iodine
+
+      cp -r ${Iodine}/lib/node_modules/Iodine $out/share/iodine/electron
+      substituteInPlace $out/share/iodine/electron/settings.json \
+        --subst-var-by dubnium ${dubnium.bin}/dubnium
+      substitute ${iodineWrapper} $out/bin/iodine \
+        --subst-var out
+      chmod +x $out/bin/iodine
+    '';
   };
 
   lingjian = mkHaliteBot rec {

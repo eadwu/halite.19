@@ -1,0 +1,8 @@
+[
+  {
+    "fluorine": "git+https://github.com/fohristiwhirl/fluorine"
+  },
+  {
+    "iodine": "git+https://github.com/fohristiwhirl/iodine"
+  }
+]
