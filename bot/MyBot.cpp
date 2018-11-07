@@ -14,11 +14,11 @@ int main(int argc, char* argv[]) {
     Game game;
     game.ready("Lingjian Major");
 
-    ostringstream initial_debug;
-    initial_debug
+    ostringstream init_debug;
+    init_debug
         << "Player id is " << game.my_id << '\n'
         << "Projected turn limit is " << game.turn_limit;
-    log::log(initial_debug.str());
+    log::log(init_debug.str());
 
     for (;;) {
         game.update_frame();
