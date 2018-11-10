@@ -32,6 +32,14 @@ namespace hlt {
             return at(entity->position);
         }
 
+        int total_ships() {
+            return std::accumulate(cells.begin(), cells.end(), 0, [](int total, const auto& row) {
+                return total + std::accumulate(row.begin(), row.end(), 0, [](int subtotal, const auto& cell) {
+                    return cell.is_occupied() ? subtotal + 1 : subtotal;
+                });
+            });
+        }
+
         std::vector<std::shared_ptr<Ship>> ships_in_range(Position& pos, int range) {
             std::vector<std::shared_ptr<Ship>> ships;
             std::vector<Position> surroundings = pos.get_surroundings_in_range(range);

@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
             !game_map->at(me->shipyard)->is_occupied())
         {
             ostringstream spawn_debug;
-            spawn_debug << "GEN S" << game.total_ships() + 1;
+            spawn_debug << "GEN S" << game_map->total_ships() + 1;
 
             log::log(spawn_debug.str());
             command_queue.push_back(me->shipyard->spawn());

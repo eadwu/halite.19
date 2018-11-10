@@ -22,14 +22,8 @@ namespace hlt {
         void update_frame();
         bool end_turn(const std::vector<Command>& commands);
 
-        int total_ships() {
-            return std::accumulate(begin(players), end(players), 0, [](int total, const auto& plr) {
-                return total + plr->ships.size();
-            });
-        }
-
         int average_enemy_ships() {
-            return (total_ships() - me->ships.size()) / (players.size() - 1);
+            return (game_map->total_ships() - me->ships.size()) / (players.size() - 1);
         }
 
         std::vector<std::shared_ptr<Ship>> enemy_ships_in_range(Position& pos, int range) {
