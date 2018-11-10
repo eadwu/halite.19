@@ -98,7 +98,7 @@ namespace hlt {
             std::vector<Position> path;
 
             auto gScore = [this](const std::pair<double, Position>& a, const std::pair<double, Position>& b) {
-                return at(a.second)->priority > at(b.second)->priority;
+                return a.first > b.first;
             };
             std::priority_queue<std::pair<double, Position>, std::vector<std::pair<double, Position>>, decltype(gScore)> frontier(gScore);
             std::unordered_map<Position, MapCell*> came_from;
@@ -120,9 +120,9 @@ namespace hlt {
                     break;
                 }
 
-                for (Position next : current.get_surrounding_cardinals()) {
-                    next = normalize(next);
-                    double new_cost = cost_so_far[current] + at(next)->halite * 0.1;
+                for (Position p : current.get_surrounding_cardinals()) {
+                    Position next = normalize(p);
+                    double new_cost = cost_so_far[current] + at(next)->priority * 0.1;
 
                     if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next]) {
                         cost_so_far[next] = new_cost;
