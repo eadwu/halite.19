@@ -34,5 +34,10 @@ namespace hlt {
         void mark_unsafe(std::shared_ptr<Ship>& ship) {
             this->ship = ship;
         }
+
+        void set_properties(Halite halite) {
+            this->halite = halite;
+            this->priority = halite;
+        }
     };
 }

@@ -5,6 +5,7 @@ void hlt::GameMap::_update() {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             cells[y][x].ship.reset();
+            cells[y][x].set_properties(cells[y][x].halite);
         }
     }
 
@@ -16,8 +17,7 @@ void hlt::GameMap::_update() {
         int y;
         int halite;
         hlt::get_sstream() >> x >> y >> halite;
-        cells[y][x].halite = halite;
-        cells[y][x].priority = halite;
+        cells[y][x].set_properties(halite);
     }
 }
 
