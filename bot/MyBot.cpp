@@ -26,10 +26,15 @@ int main(int argc, char* argv[]) {
         unique_ptr<GameMap>& game_map = game.game_map;
 
         vector<Command> command_queue;
+        vector<shared_ptr<Ship>> sortedShips;
 
-        for (const auto& ship_iterator : me->ships) {
+        for (const auto& ship_iterator : me->ships) sortedShips.push_back(ship_iterator.second);
+        sort(sortedShips.begin(), sortedShips.end(), [&](const auto& a, const auto& b) {
+            return game_map->calculate_distance(a->position, me->shipyard->position) < game_map->calculate_distance(b->position, me->shipyard->position);
+        });
+
+        for (const auto& ship : sortedShips) {
             ostringstream action_debug;
-            shared_ptr<Ship> ship = ship_iterator.second;
             MapCell *cell = game_map->at(ship);
 
             vector<Position> path_to_shipyard = game_map->calculate_path(ship->position, me->shipyard->position);
