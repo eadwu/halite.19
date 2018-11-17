@@ -3,8 +3,6 @@
 
 { name, src, version }:
 
-with stdenv;
-
 stdenv.mkDerivation {
   inherit name src version;
 
