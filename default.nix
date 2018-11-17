@@ -44,14 +44,14 @@ let
 in rec {
   dubnium = buildGoPackage rec {
     name = "Dubnium-${version}";
-    version = "20181110";
+    version = "20181114";
     goPackagePath = "github.com/fohristiwhirl/dubnium";
 
     src = fetchFromGitHub {
       owner = "fohristiwhirl";
       repo = "dubnium";
-      rev = "fa906da6ec487b94dab737edb944726fe6ea36b1";
-      sha256 = "1acvwmxdz70c1x632hzqkblbbzfmf0iqx4h57bg198yfr4jb9p76";
+      rev = "4de9ff73098718ddbc1bc060910dfa27ec74f095";
+      sha256 = "0lmxvl1r50l7f07z47kvhinhlpfqsng68bg0pnm2gj1jaxlz8afi";
     };
 
     allowGoReference = true;
