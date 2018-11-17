@@ -6,8 +6,9 @@ let
   mkHaliteBot = callPackage ./common.nix { };
 
   haliteVersion = "1.1.4";
-  haliteSource = fetchgit {
-    url = "https://github.com/HaliteChallenge/Halite-III";
+  haliteSource = fetchFromGitHub {
+    owner = "HaliteChallenge";
+    repo = "Halite-III";
     rev = "v${haliteVersion}";
     sha256 = "1g581bzyyajilvc3p8akvpg0jfdpmaxb6sn188qxspg5j2f0kzhv";
   };
@@ -96,15 +97,17 @@ in rec {
     srcs = [
       "${haliteSource}/game_engine"
 
-      (fetchgit {
+      (fetchFromGitHub {
         name = "catch";
-        url = "https://github.com/catchorg/Catch2";
+        owner = "catchorg";
+        repo = "Catch2";
         rev = "v2.2.3";
         sha256 = "1v7j7rd2i79qaij0izvidjvcjximxp6drimc1ih7sinv2194j1f8";
       })
 
-      ("${fetchgit {
-        url = "https://github.com/nlohmann/json";
+      ("${fetchFromGitHub {
+        owner = "nlohmann";
+        repo = "json";
         rev = "v3.1.2";
         sha256 = "1mpr781fb2dfbyscrr7nil75lkxsazg4wkm749168lcf2ksrrbfi";
       }}/include")
@@ -116,9 +119,10 @@ in rec {
         sha256 = "16hwjkm5q26p11w2wfzbkyxm20z8hn8wid9v8iqhz5cmayz808l7";
       })
 
-      (fetchgit {
+      (fetchFromGitHub {
         name = "zstd";
-        url = "https://github.com/facebook/zstd";
+        owner = "facebook";
+        repo = "zstd";
         rev = "v1.3.4";
         sha256 = "090ba7dnv5z2v4vlb8b275b0n7cqsdzjqvr3b6a0w65z13mgy2nw";
       })
@@ -155,8 +159,9 @@ in rec {
     name = "Halite-III-Benchmark-Bots-${version}";
     version = "20181020";
 
-    src = fetchgit {
-      url = "https://github.com/fohristiwhirl/halite3_benchmarks";
+    src = fetchFromGitHub {
+      owner = "fohristiwhirl";
+      repo = "halite3_benchmarks";
       rev = "da9614c9464b06b9d515e709f3659a7148b4c708";
       sha256 = "0pxc8yl66j7a92r46zqm0hchzmbxamhapihpyxf577zhwiirf1r4";
     };
