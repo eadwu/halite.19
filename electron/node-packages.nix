@@ -41,8 +41,8 @@ in
     version = "0.2.0";
     src = fetchgit {
       url = "https://github.com/fohristiwhirl/iodine";
-      rev = "bf77fa84a18d97bdfacefa954f6d3fa0a3e1d0b3";
-      sha256 = "7573790efa119fb4aa4b9d93d9b4515b202e0bc4b6932f35589a63802063d014";
+      rev = "d9761d84e1e89fc9a55446b6cd71ab9ead76473b";
+      sha256 = "938055c078165d3a8d9e87aebe46a818eec12ecf5d5221a46405b92b0bc4061f";
     };
     buildInputs = globalBuildInputs;
     meta = {
