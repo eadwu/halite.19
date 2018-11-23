@@ -19,11 +19,11 @@ in
   "fluorine-git+https://github.com/fohristiwhirl/fluorine" = nodeEnv.buildNodePackage {
     name = "Fluorine";
     packageName = "Fluorine";
-    version = "1.2.4";
+    version = "1.2.5";
     src = fetchgit {
       url = "https://github.com/fohristiwhirl/fluorine";
-      rev = "7df86ad32650f21c5e8f203edf5cb2d670ba486d";
-      sha256 = "9a5ddc3355a45f566359a1fd3d37f477e99d0cbf451e76dc1095958a9a63e278";
+      rev = "88a63f3dd7ddc6eddceafbed4c42fc98d271de00";
+      sha256 = "6b964f9914367bbcb8af9d3e8dd86c58feca4693f4540740f21f608fb01eeb96";
     };
     dependencies = [
       sources."node-zstandard-1.2.4"
