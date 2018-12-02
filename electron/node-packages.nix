@@ -22,8 +22,8 @@ in
     version = "1.2.5";
     src = fetchgit {
       url = "https://github.com/fohristiwhirl/fluorine";
-      rev = "8ce45003406d8a191bec087e7720a10c4f6989a1";
-      sha256 = "3b431a74e78fbd560f20aae674a3c0d6ad5c03d7fe22b94086af588cdb5fd4c4";
+      rev = "0428c47bebcd370d810e54693d9b34ddda13f039";
+      sha256 = "bd0a29ea718a90221fe6ba7f969a0f091115030ba07234b2652d1cd44ee92069";
     };
     dependencies = [
       sources."node-zstandard-1.2.4"
