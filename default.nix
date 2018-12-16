@@ -5,12 +5,12 @@ with pkgs;
 let
   mkHaliteBot = callPackage ./common.nix { };
 
-  haliteVersion = "1.1.5";
+  haliteVersion = "1.1.6";
   haliteSource = fetchFromGitHub {
     owner = "HaliteChallenge";
     repo = "Halite-III";
     rev = "v${haliteVersion}";
-    sha256 = "1rmdm7wnw2m143y169h0naf1f3w6p5m9cfg543l21ls1vra6g8r8";
+    sha256 = "0c3yyvzk6jlvnxyiassi8n8l1p37ff91gvq1vmwjcbh53gvv4mil";
   };
 
   electronPackages = import ./electron { inherit pkgs; };
