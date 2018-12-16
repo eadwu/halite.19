@@ -219,9 +219,9 @@ in rec {
     src = "${fetchgit {
       url = ./.;
       rev = version;
-      sha256 = "1n93mdrp2k88ihvjfzjzkk28fqli0kxmfzn3mzmv7rgq7hz2fwvp";
+      sha256 = "1p5vli7dcx6pr2rm47kjgq3lq17dm6n362vjqpv0jw55z3ykb71h";
     }}/bot";
-    version = "2.0.2";
+    version = "2.0.3";
     name = "Lingjian-${version}";
   };
 
