@@ -4,11 +4,13 @@
 
 #include <math.h>
 
+#include <chrono>
 #include <sstream>
 #include <algorithm>
 
 using namespace std;
 using namespace hlt;
+using namespace std::chrono;
 
 int main(int argc, char* argv[]) {
     Game game;
@@ -21,6 +23,7 @@ int main(int argc, char* argv[]) {
     log::log(init_debug.str());
 
     for (;;) {
+        auto t0 = steady_clock::now();
         game.update_frame();
         shared_ptr<Player> me = game.me;
         unique_ptr<GameMap>& game_map = game.game_map;
@@ -93,6 +96,10 @@ int main(int argc, char* argv[]) {
         if (!game.end_turn(command_queue)) {
             break;
         }
+
+        auto t1 = steady_clock::now();
+        auto delta = duration_cast<microseconds>(t1 - t0).count();
+        log::log("Turn took " + to_string(delta) + "us");
     }
 
     return 0;
