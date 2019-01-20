@@ -1,14 +1,45 @@
 #!/usr/bin/env nix-shell
-#!nix-shell --pure -i bash
+#!nix-shell --pure -i bash -p python3
 set -e
 
-iterations=${1:-20}
+iterations=${1:-10}
 
 [ ! -d replays ] && mkdir replays
-[ ! -z replays ] && rm replays/*
+[ -f gym.db ] && rm gym.db
 
-result-3/bin/hlt gym --db-path ./gym.db \
+# high: 119961048 116976978 141100176 16333476
+# low: 107155935 116575500 79364562 140092622
+
+# result-6/bin/iodine --replay-directory replays -s 140092622 result-7/MyBot result-8/MyBot
+# result-6/bin/iodine --replay-directory replays -s 140092622 \
+#   result-7/MyBot \
+#   result-8/MyBot \
+#   "$(command -v python3) result-4/collector.py" \
+#   "$(command -v python3) result-4/priority_collector.py"
+
+# result-3/bin/halite --replay-directory replays -s 1541867794 result-7/MyBot result-8/MyBot
+# result-3/bin/halite --replay-directory replays -s 140092622 \
+#   result-7/MyBot \
+#   result-8/MyBot \
+#   "$(command -v python3) result-4/collector.py" \
+#   "$(command -v python3) result-4/priority_collector.py"
+
+# result-5/bin/hlt play -b result-3/bin/halite --output-dir replays -i $iterations -r result-7/MyBot -r result-8/MyBot
+# result-5/bin/hlt play -b result-3/bin/halite --output-dir replays -i $iterations \
+#   -r result-7/MyBot \
+#   -r result-8/MyBot \
+#   -r "$(command -v python3) result-4/collector.py" \
+#   -r "$(command -v python3) result-4/priority_collector.py"
+
+# result-5/bin/hlt gym --db-path ./gym.db register "Collector" "/run/current-system/sw/bin/python3 $(readlink -f result-4/collector.py)"
+# result-5/bin/hlt gym --db-path ./gym.db register "Hopper Collector" "/run/current-system/sw/bin/python3 $(readlink -f result-4/hopper_collector.py)"
+# result-5/bin/hlt gym --db-path ./gym.db register "Priority Collector" "/run/current-system/sw/bin/python3 $(readlink -f result-4/priority_collector.py)"
+result-5/bin/hlt gym --db-path ./gym.db register "Lingjian Alfa" $(readlink -f result-7/MyBot)
+result-5/bin/hlt gym --db-path ./gym.db register "Lingjian Major" $(readlink -f result-8/MyBot)
+# result-5/bin/hlt gym --db-path ./gym.db register "MyCppBot" $(readlink -f result-9/MyBot)
+
+result-5/bin/hlt gym --db-path ./gym.db \
   evaluate \
-  --binary result/bin/halite \
-  --output-dir ./replays \
+  --binary result-3/bin/halite \
+  --output-dir replays \
   --iterations $iterations
