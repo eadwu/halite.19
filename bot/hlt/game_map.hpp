@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <unordered_map>
 
+#include <math.h>
+
 namespace hlt {
     struct GameMap {
         int width;
@@ -55,6 +57,22 @@ namespace hlt {
             return std::accumulate(surroundings.begin(), surroundings.end(), 0., [this](int total, const auto& p) {
                 return total + at(normalize(p))->priority;
             }) / surroundings.size();
+        }
+
+        void exude_priority_in_range(Position& pos, int range, double start) {
+            std::vector<Position> surroundings = pos.get_surroundings_in_range(range);
+
+            for (const auto& p : surroundings) {
+                if (p.x == pos.x && p.y == pos.y) continue;
+                // log::log("Old Priority: " + std::to_string(at(p)->priority));
+                // log::log("Modifier: " + std::to_string(start * std::pow(0.5, calculate_distance(pos, p))));
+                at(p)->priority = at(p)->priority + (start * std::pow(0.5, calculate_distance(pos, p)));
+                // log::log("New Priority: " + std::to_string(at(p)->priority));
+            }
+        }
+
+        void exude_priority_in_range(Position& pos, int range) {
+            exude_priority_in_range(pos, range, at(pos)->halite);
         }
 
         int calculate_distance(const Position& source, const Position& target) {
@@ -128,7 +146,7 @@ namespace hlt {
                     break;
                 }
 
-                for (Position p : current.get_surrounding_cardinals()) {
+                for (Position p : current.get_surroundings_in_range(1)) {
                     Position next = normalize(p);
                     double new_cost = cost_so_far[current] + at(next)->priority * 0.1;
 

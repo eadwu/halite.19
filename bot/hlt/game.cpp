@@ -42,10 +42,21 @@ void hlt::Game::update_frame() {
 
     game_map->_update();
 
+    for (auto& row : game_map->cells) {
+        for (auto& cell : row) {
+            cell.priority = enemy_ships_in_range(cell.position, 4).size() >= 2 ? cell.halite * 2 : cell.halite;
+        }
+    }
+
     for (const auto& player : players) {
         for (auto& ship_iterator : player->ships) {
             auto ship = ship_iterator.second;
             game_map->at(ship)->mark_unsafe(ship);
+
+            if (player->id != me->id) {
+                // game_map->exude_priority_in_range(game_map->at(ship)->position, 2, -1000);
+                // game_map->exude_priority_in_range(game_map->at(ship)->position, 2, -1.0 * (game_map->at(ship)->halite / 2));
+            }
         }
 
         game_map->at(player->shipyard)->structure = player->shipyard;

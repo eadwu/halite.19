@@ -31,6 +31,11 @@ namespace hlt {
             return returning;
         }
 
+        void reset_status() {
+            suicidal = false;
+            returning = false;
+        }
+
         Command make_dropoff() const {
             return hlt::command::transform_ship_into_dropoff_site(id);
         }

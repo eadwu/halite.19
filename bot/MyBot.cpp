@@ -12,9 +12,38 @@ using namespace std;
 using namespace hlt;
 using namespace std::chrono;
 
+/**
+ * NOTE: Register golden ratio as 8 / 25
+ *
+ * TODO: Refinement
+ * NOTE: Pathfinding using priority
+ * NOTE: Swapping is only "intrinsically" supported, not explicit
+ *
+ * TODO: Priority mapping
+ * NOTE: Temporary decay function: halite * 0.5 ** distance; Look at exponential decay
+ * NOTE: My ships should repel in an attempt to reduce focus and clumping
+ * NOTE: Collisions shouldn't occur unless 100% neccessary
+ *       Take note of the shipyard blocking meta (whether on its borders or cell)
+ * NOTE: Halite should exude to make clumps of halite more attractive
+ *       "Inspired" ship locations should also be kept track of
+ * NOTE: Enemy ship priority distribution should be calculated at the start of every turn
+ *       My ships' priority distribution should be calculated on the go
+ *
+ * TODO: Integrate dropoffs
+ * NOTE: Pathfinding should respect dropoffs
+ * NOTE: 16-18 ships per dropoff ratio, so around 0-4 in most matches
+ * NOTE: Certain distance between other shipyards and dropoffs
+ * NOTE: Decide where to place by efficiency, around 4-8 radius should have a certain efficiency/profit
+ *
+ * TODO: Offensive strategy, annihilation
+ * NOTE: Seems like it fits 2p
+ * NOTE: Ships should be <N> times more than opponents
+ * NOTE: Halite should be <N> times more than opponents
+ * PROPOSED: 1.32 and 1.68 respectively
+ */
 int main(int argc, char* argv[]) {
     Game game;
-    game.ready("Lingjian Major");
+    game.ready("Lingjian Alfa");
 
     ostringstream init_debug;
     init_debug
@@ -43,12 +72,12 @@ int main(int argc, char* argv[]) {
             vector<Position> path_to_shipyard = game_map->calculate_path(ship->position, me->shipyard->position);
             array<Position, 4> borders = cell->position.get_surrounding_cardinals_in_range(2);
 
-            sort(borders.begin(), borders.end(), [&](Position a, Position b) {
+            sort(borders.begin(), borders.end(), [&](Position& a, Position& b) {
                 return game_map->average_priority_in_range(a, 2) > game_map->average_priority_in_range(b, 2);
             });
 
-            ship->suicidal = (unsigned) game.turn_number >= game.turn_limit - path_to_shipyard.size() + 2;
-            if (game_map->at(ship)->has_structure() || ship->halite == 0) ship->returning = false;
+            ship->suicidal = game.turn_number >= game.turn_limit - (int) path_to_shipyard.size();
+            if (game_map->at(ship)->has_structure() || ship->halite == 0) ship->reset_status();
 
             if (ship->is_full() ||
                 ship->is_suicidal() ||
@@ -67,8 +96,8 @@ int main(int argc, char* argv[]) {
                 command_queue.push_back(ship->move(chosen_dir));
             }
             else if (ship->halite < cell->halite * 0.1 ||
-                     cell->halite > constants::MAX_HALITE / 20 ||
-                     cell->priority * 1.32 > game_map->at(borders[0])->priority)
+                     cell->halite > constants::MAX_HALITE / 10 + ((int) (15 * (game.turn_number / game.turn_limit))) ||
+                     cell->priority * 1.32 > game_map->at(borders.at(0))->priority)
             {
                 action_debug << "COL " << ship << " " << cell->position << " " << cell->halite * 0.1;
                 command_queue.push_back(ship->stay_still());
@@ -84,7 +113,7 @@ int main(int argc, char* argv[]) {
         if ((me->ships.size() < 5 || me->ships.size() < game.average_enemy_ships() * (1 + pow(2, game.players.size() * 0.1))) &&
             game.turn_number < game.turn_limit * 0.5 &&
             me->halite >= constants::SHIP_COST &&
-            !game_map->at(me->shipyard)->is_occupied())
+            (!game_map->at(me->shipyard)->is_occupied() || game_map->at(me->shipyard)->ship->owner != me->id))
         {
             ostringstream spawn_debug;
             spawn_debug << "GEN S" << game_map->total_ships() + 1;

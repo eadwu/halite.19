@@ -22,6 +22,13 @@ namespace hlt {
             halite(0)
         {}
 
+        std::vector<std::shared_ptr<Entity>> get_structures() {
+            std::vector<std::shared_ptr<Entity>> structures;
+            structures.push_back(shipyard);
+            for (const auto& d : dropoffs) structures.push_back(d.second);
+            return structures;
+        }
+
         void _update(int num_ships, int num_dropoffs, Halite halite);
         static std::shared_ptr<Player> _generate();
     };
